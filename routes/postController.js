@@ -1,29 +1,32 @@
 const express = require('express');
-const { UNSAFE_enhanceManualRouteObjects } = require('react-router-dom');
 const router = express.Router()
 const ObjectID = require('mongoose').Types.ObjectId
 
 const { PostModel } = require('../models/postModel');
 
 router.get('/', (req, res) => {
-    
     res.render("chicken/add", {
         viewTitle : "Créer un chicken"
     })
 })
 
 router.post('/', (req, res) => {
-    const chicken = new PostModel()
+    insertRecord(req, res);
+});
+
+
+function insertRecord(req, res) {
+    var chicken = new PostModel();
     chicken.name = req.body.name
-    chicken.birthday = req.body.birthday
     chicken.weight = req.body.weight
-    chicken.steps = req.body.steps
-    chicken.isRunning = req.body.isRunning
-    chicken.save((err, docs) => {
-        if (!err) res.redirect('chicken/list');
-        else console.log('Error creating new data : ' + err);
-      })
-})
+    chicken.save((err, doc) => {
+        if (!err)
+            res.redirect('chicken/list');
+        else {
+            console.log('Error during record insertion : ' + err);
+        }
+    });
+}
 
 router.get('/list', (req,res) => {
     res.json('from list')
