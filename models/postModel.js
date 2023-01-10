@@ -5,19 +5,15 @@ const PostModel = mongoose.model(
     {
         name: {
             type: String,
-            required: true
         },
         birthday: {
             type: Date,
-            required: true
         },
         weight: {
             type: Number,
-            required: true
         },
         steps: {
             type: Number,
-            required: true
         },
         isRunning: {
             type: Boolean,

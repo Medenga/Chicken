@@ -1,31 +1,35 @@
-const express = require('express')
+const express = require('express');
+const { UNSAFE_enhanceManualRouteObjects } = require('react-router-dom');
 const router = express.Router()
 const ObjectID = require('mongoose').Types.ObjectId
 
 const { PostModel } = require('../models/postModel');
 
-router.get('/chicken/show', (req, res) => {
-    PostModel.find((err, docs) => {
-        if(!err) res.send(docs);
-        else console.log("Error to get data: " + err);
+router.get('/', (req, res) => {
+    
+    res.render("chicken/add", {
+        viewTitle : "Créer un chicken"
     })
 })
 
-router.post('/chicken', (req, res) => {
-    const newRecord = new PostModel({
-        name: req.body.name,
-        birthday: req.body.birthday,
-        weight: req.body.weight,
-        steps: req.body.steps,
-        isRunning: req.body.isRunnig
-    })
-    newRecord.save((err, docs) => {
-        if (!err) res.send(docs);
+router.post('/', (req, res) => {
+    const chicken = new PostModel()
+    chicken.name = req.body.name
+    chicken.birthday = req.body.birthday
+    chicken.weight = req.body.weight
+    chicken.steps = req.body.steps
+    chicken.isRunning = req.body.isRunning
+    chicken.save((err, docs) => {
+        if (!err) res.redirect('chicken/list');
         else console.log('Error creating new data : ' + err);
       })
 })
 
-router.put("/chicken/:id", (req, res) => {
+router.get('/list', (req,res) => {
+    res.json('from list')
+})
+
+router.put("/:id", (req, res) => {
     if (!ObjectID.isValid(req.params.id))
       return res.status(400).send("ID unknow : " + req.params.id)
     
@@ -48,7 +52,7 @@ router.put("/chicken/:id", (req, res) => {
       )
 })
 
-router.delete("/chicken/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
     if (!ObjectID.isValid(req.params.id))
       return res.status(400).send("ID unknow : " + req.params.id)
     
